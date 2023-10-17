@@ -1,0 +1,41 @@
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    margin-right: 20px;
+  }
+
+  padding: 40px;
+}
+
+.header__logo {
+  display: flex;
+}
+.header__title {
+  text-align: start;
+  h1 {
+    font-size: 24px;
+    text-transform: uppercase;
+  }
+}
+
+.button__delimiter {
+  width: 1px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.25);
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.button {
+  width: 150px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  background-color: #fe5f1e;
+  border-radius: 10px;
+}
+hr {
+  border-color: antiquewhite;
+}

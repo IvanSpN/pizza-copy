@@ -1,0 +1,49 @@
+@import './libs/variables';
+@import './libs/normalize';
+@import './components/all';
+
+body {
+  background-color: $background;
+  padding: 30px;
+}
+
+.wrapper {
+  width: 1440px;
+  border: 2px solid $gray-line;
+  background-color: $gray-line;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.cart-wrapper {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid black;
+}
+.cart-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-clear {
+  min-width: 90px;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.izb-wrapper {
+  display: flex;
+}
+
+.izb-top {
+  padding: 30px;
+}
+
+.izb-items {
+  padding: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+}

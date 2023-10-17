@@ -1,0 +1,139 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    -webkit-animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@-webkit-keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.content {
+}
+.content__container {
+  padding: 40px;
+  h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+.content__top {
+  display: flex;
+  justify-content: space-between;
+}
+.category {
+  ul {
+    display: flex;
+    gap: 20px;
+    li {
+      cursor: pointer;
+      font-size: 20px;
+      &.active {
+        color: red;
+      }
+    }
+  }
+}
+.sort {
+}
+.sort__label {
+  span {
+    color: #fe5f1e;
+    border-bottom: 1px dashed #fe5f1e;
+    cursor: pointer;
+  }
+  b {
+    margin-right: 10px;
+  }
+}
+.sort__popup {
+  margin-top: 10px;
+  ul {
+    overflow: hidden;
+    li {
+      cursor: pointer;
+      &:hover {
+        background-color: green;
+      }
+      &.active {
+        font-weight: bold;
+        color: #fe5f1e;
+      }
+    }
+  }
+}
+.content__title {
+  text-align: start;
+}
+
+.content__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 130px;
+}
+.varenik-block {
+}
+
+.varenik-block__image {
+}
+
+.varenik-block__title {
+}
+
+.varenik-block__selector {
+  ul {
+    li {
+      cursor: pointer;
+      &.active {
+        color: red;
+      }
+    }
+  }
+}
+
+.varenik-block__bottom {
+  varenik-block__price {
+  }
+  button {
+    color: red;
+  }
+}
