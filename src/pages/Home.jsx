@@ -7,17 +7,20 @@ import Sort from '../components/Sort';
 import VarenikBlock from '../components/VarenikBlock/VarenikBlock';
 import { SearchContext } from '../App';
 
-import vareniki from '../assets/vareniki.json';
 import Skeleton from '../components/VarenikBlock/Skeleton';
 
 export const SortContext = createContext('');
 
 function Home() {
   // контекст для searchValue
-  const { searchValue, onClickToFavorites } = useContext(SearchContext);
-
-  // стейт лоадера
-  const [isLoading, setIsLoading] = React.useState(true);
+  const {
+    searchValue,
+    onClickToFavorites,
+    items,
+    setItems,
+    isLoading,
+    setIsLoading,
+  } = useContext(SearchContext);
 
   // стейт выбора категории, передает индекс из массива с категориями товара "С мясом и т.д"
   const [selectCategory, setSelectCategory] = React.useState(0);
@@ -26,12 +29,12 @@ function Home() {
   const [selectCategorySort, setSelectCategorySort] = React.useState(0);
   const [openSortList, setOpenSortList] = React.useState(false);
 
-  // функция имитации загрузки бэка
-  const getDataFromBack = () => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  };
+  // функция имитации загрузки бэка в useEffecte
+  // const getDataFromBack = () => {
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // };
 
   // метод по клику выбора категории товара "С мясом и т.д"
   const onClickCategory = (index) => {
@@ -66,10 +69,6 @@ function Home() {
     }
   };
 
-  React.useEffect(() => {
-    getDataFromBack();
-  }, []);
-
   return (
     <div>
       <div className="content">
@@ -95,21 +94,18 @@ function Home() {
           <div className="content__items">
             {isLoading
               ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
-              : vareniki
-                  .filter((vareniki) => {
+              : items
+                  .filter((items) => {
                     return (
-                      selectCategory === 0 ||
-                      vareniki.category === selectCategory
+                      selectCategory === 0 || items.category === selectCategory
                     );
                   })
-                  .filter((vareniki) =>
-                    getSearchVarenikiTitle(vareniki, searchValue)
-                  )
+                  .filter((items) => getSearchVarenikiTitle(items, searchValue))
                   .sort(getSortCategory(selectCategorySort))
-                  .map((vareniki) => (
+                  .map((items) => (
                     <VarenikBlock
-                      key={vareniki.id}
-                      {...vareniki}
+                      key={items.id}
+                      {...items}
                       onClickToFavorites={(id) => onClickToFavorites(id)}
                     />
                   ))}

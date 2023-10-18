@@ -1,23 +1,22 @@
 import React from 'react';
 
-import vareniki from '../assets/vareniki.json';
 import VarenikBlock from '../components/VarenikBlock/VarenikBlock';
 import { SearchContext } from '../App';
 
-function Izbranoe({ products }) {
-  const { onClickToFavorites } = React.useContext(SearchContext);
+function Izbranoe() {
+  const { onClickToFavorites, items } = React.useContext(SearchContext);
 
-  const favoriteProducts = products.filter((product) => product.isFavorite);
+  const favoriteProducts = items.filter((items) => items.isFavorite);
 
   return (
     <div className="izb-wrapper">
       <div className="izb-top">
         <h2>Избранные товары</h2>
         <div className="izb-items">
-          {favoriteProducts.map((product) => (
-            <li key={product.id}>
+          {favoriteProducts.map((items) => (
+            <li key={items.id}>
               <VarenikBlock
-                {...product}
+                {...items}
                 onClickToFavorites={onClickToFavorites}
               />
             </li>
