@@ -16,7 +16,10 @@ function Izbranoe({ products }) {
         <div className="izb-items">
           {favoriteProducts.map((product) => (
             <li key={product.id}>
-              <VarenikBlock {...product} />
+              <VarenikBlock
+                {...product}
+                onClickToFavorites={onClickToFavorites}
+              />
             </li>
           ))}
         </div>
