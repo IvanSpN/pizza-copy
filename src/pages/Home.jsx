@@ -1,73 +1,79 @@
 import React, { useContext } from 'react';
-import { createContext } from 'react';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectCategory, selectFilter } from '../redux/slices/filterSlice';
+
+import {
+  fetchVareniki,
+  selectVarenikiData,
+} from '../redux/slices/varenikiSlice';
 
 import Categorys from '../components/Categorys';
 import Sort from '../components/Sort';
 
 import VarenikBlock from '../components/VarenikBlock/VarenikBlock';
-import { SearchContext } from '../App';
 
 import Skeleton from '../components/VarenikBlock/Skeleton';
 
-export const SortContext = createContext('');
-
 function Home() {
-  // контекст для searchValue
-  const {
-    searchValue,
-    onClickToFavorites,
-    items,
-    setItems,
-    isLoading,
-    setIsLoading,
-  } = useContext(SearchContext);
+  const dispatch = useDispatch();
+
+  const { selectCategory, selectCategorySort, searchValue } =
+    useSelector(selectFilter);
+  const { items, status } = useSelector(selectVarenikiData);
+
+  // стейт для все продуктов
+  // const [items, setItems] = React.useState([]); -ушло в Redux
+
+  // стейт лоадера
+  // const [isLoading, setIsLoading] = React.useState(true); - перенесли в Redux
 
   // стейт выбора категории, передает индекс из массива с категориями товара "С мясом и т.д"
-  const [selectCategory, setSelectCategory] = React.useState(0);
+  // const [selectCategory, setSelectCategory] = React.useState(0); - переписали на redux
 
-  // стейт сортировки и выбора пункта-категории сортировки по "цене и т.д", стейт открытия-закрытия попАпа
-  const [selectCategorySort, setSelectCategorySort] = React.useState(0);
-  const [openSortList, setOpenSortList] = React.useState(false);
+  // const [selectCategorySort, setSelectCategorySort] = React.useState({
+  //   name: 'популярности',
+  //   sortProperty: 'rating',
+  // }); - переписали на redux
 
-  // функция имитации загрузки бэка в useEffecte
-  // const getDataFromBack = () => {
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 2000);
-  // };
+  const getPizzas = async () => {
+    const sortBy = selectCategorySort.sortProperty.replace('-', '');
+    const order = selectCategorySort.sortProperty.includes('-')
+      ? 'asc'
+      : 'desc';
+    const category = selectCategory > 0 ? `category=${selectCategory}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
+
+    dispatch(
+      fetchVareniki({
+        sortBy,
+        order,
+        category,
+        search,
+      })
+    );
+
+    window.scrollTo(0, 0);
+  };
+
+  React.useEffect(() => {
+    window.scroll(0, 0);
+
+    getPizzas();
+  }, [selectCategory, selectCategorySort, searchValue]);
 
   // метод по клику выбора категории товара "С мясом и т.д"
   const onClickCategory = (index) => {
-    setSelectCategory(index);
+    dispatch(setSelectCategory(index));
   };
 
-  //   метод клика по категории сортировки по "цене и т.д", он же закрывает-открывает попАп
-  const onClickSortCategory = (index) => {
-    setSelectCategorySort(index);
-    setOpenSortList(false);
-  };
+  const vareniki = items.map((element) => (
+    <VarenikBlock key={element.id} {...element} />
+  ));
 
-  // функция поиска вареников по названию
-  const getSearchVarenikiTitle = (element, searchValue) => {
-    return element.title.toLowerCase().includes(searchValue.toLowerCase());
-  };
-
-  // const filteredVareniki = vareniki.filter((element) => filterByTitle(element, searchValue));
-
-  //   функция сортировки массива по категориям "цене и т.д"
-  const getSortCategory = (selectCategorySort) => {
-    switch (selectCategorySort) {
-      case 0:
-        return (a, b) => b.rating - a.rating;
-      case 1:
-        return (a, b) => a.price - b.price;
-      case 2:
-        return (a, b) =>
-          a.title.localeCompare(b.title, 'ru', { sensitivity: 'base' });
-      default:
-        return (a, b) => a.id - b.id;
-    }
-  };
+  const skeletons = [...new Array(8)].map((_, index) => (
+    <Skeleton key={index} />
+  ));
 
   return (
     <div>
@@ -75,41 +81,28 @@ function Home() {
         <div className="content__container">
           <div className="content__top">
             <Categorys
-              onClickCategory={(index) => onClickCategory(index)}
+              onClickCategory={onClickCategory}
               selectCategory={selectCategory}
             />
-            <SortContext.Provider
-              value={{
-                selectCategorySort,
-                setSelectCategorySort,
-                openSortList,
-                setOpenSortList,
-                onClickSortCategory,
-              }}
-            >
-              <Sort />
-            </SortContext.Provider>
+
+            <Sort />
           </div>
           <h2 className="content__title">Все вареники</h2>
-          <div className="content__items">
-            {isLoading
-              ? [...new Array(8)].map((_, index) => <Skeleton key={index} />)
-              : items
-                  .filter((items) => {
-                    return (
-                      selectCategory === 0 || items.category === selectCategory
-                    );
-                  })
-                  .filter((items) => getSearchVarenikiTitle(items, searchValue))
-                  .sort(getSortCategory(selectCategorySort))
-                  .map((items) => (
-                    <VarenikBlock
-                      key={items.id}
-                      {...items}
-                      onClickToFavorites={(id) => onClickToFavorites(id)}
-                    />
-                  ))}
-          </div>
+          {status === 'error' ? (
+            <div className="content__error-info">
+              <h2>
+                Произошла ошибка <icon>😕</icon>
+              </h2>
+              <p>
+                К сожалению не удалось получить вареники. Попробуйте повторить
+                запрос позже.
+              </p>
+            </div>
+          ) : (
+            <div className="content__items">
+              {status === 'loading' ? skeletons : vareniki}
+            </div>
+          )}
         </div>
       </div>
     </div>

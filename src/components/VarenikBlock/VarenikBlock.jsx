@@ -1,6 +1,9 @@
 import React from 'react';
 import unliked from '../../assets/img/heart-unliked-icon.svg';
 import liked from '../../assets/img/heart-liked-icon.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 
 function VarenikBlock({
   title,
@@ -11,29 +14,49 @@ function VarenikBlock({
   id,
   onClickToFavorites,
 }) {
+  const dispatch = useDispatch();
+
+  const cartItem = useSelector((state) =>
+    state.cart.items.find((obj) => obj.id === id)
+  );
   // стейт выбора типа теста товара
   const [activeType, setActiveType] = React.useState(0);
-
   // стейт выбора размера товара
   const [activeSize, setActiveSize] = React.useState(0);
+
+  const addedCount = cartItem ? cartItem.count : 0;
+
+  const onClickAdd = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: typeList[activeType],
+      size: sizes[activeSize],
+    };
+    dispatch(addItem(item));
+  };
 
   const typeList = ['дрожжевое', 'без дрозжевое'];
   return (
     <div>
       <div className="varenik-block">
-        <img
-          className="varenik-block__image"
-          src={imageUrl}
-          alt=""
-          width={240}
-        />
-        <div className="varenik-block__title">{title}</div>
+        <Link to={`/vareniki/${id}`}>
+          <img
+            className="varenik-block__image"
+            src={imageUrl}
+            alt=""
+            width={240}
+          />
+          <div className="varenik-block__title">{title}</div>
+        </Link>
         <div className="varenik-block__selector">
           <ul>
             {typeList.map((el, index) => {
               return (
                 <li
-                  key={el.id}
+                  key={index}
                   className={activeType === index ? 'active' : ''}
                   onClick={() => setActiveType(index)}
                 >
@@ -45,7 +68,7 @@ function VarenikBlock({
           <ul>
             {sizes.map((el, index) => (
               <li
-                key={el.id}
+                key={index}
                 className={activeSize === index ? 'active' : ''}
                 onClick={() => setActiveSize(index)}
               >
@@ -73,8 +96,8 @@ function VarenikBlock({
                 fill="#EB5A1E"
               />
             </svg>
-            <span>Добавить</span>
-            <i>2</i>
+            <span onClick={onClickAdd}>Добавить</span>
+            {addedCount > 0 && <i>{addedCount}</i>}
           </div>
         </div>
         <div onClick={() => onClickToFavorites(id)}>

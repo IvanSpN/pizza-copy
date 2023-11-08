@@ -25,6 +25,10 @@ body {
 .cart-top {
   display: flex;
   justify-content: space-between;
+  padding: 10px;
+  button {
+    cursor: pointer;
+  }
 }
 
 .cart-clear {
